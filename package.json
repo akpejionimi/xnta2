@@ -1,0 +1,26 @@
+{
+  "name": "expressbackend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon -L server.js",
+    "dev": "concurrently \"nodemon -L server.js\" \"cd client && npm start\"",
+    "clientinstall": "cd client && npm install"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "bcrypt": "^3.0.6",
+    "cors": "^2.8.5",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^1.6.5",
+    "sequelize": "^5.9.4"
+  },
+  "dependencies": {
+    "concurrently": "^4.1.1"
+  }
+}
