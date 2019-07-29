@@ -12,7 +12,7 @@ app.use(express.json());
 //import Routes
 const operatorRoutes = require('./routes/api/operator');
 const loginRoutes = require('./routes/api/auth');
-const staffRoutes = require('./routes/api/staff')
+const staffRoutes = require('./routes/api/staff');
 const customerRoutes = require('./routes/api/customer')
 
 //Routes

@@ -68,7 +68,7 @@ exports.getCustomerById = (req, res) => {
     })
         .then(customer => {
             if (!customer) {
-                res.status(404).json({ success: false, message: "customer not Found" });
+                res.status(404).json({ success: false, msg: "customer not Found" });
             } else {
                 res.json(customer);
             }
@@ -120,4 +120,29 @@ exports.deleteCustomer = (req, res) => {
 		.catch(err =>
 			res.json({ success: false, message: "This customer doesnt exists" })
 		);
+};
+
+exports.postUpdateStaff=(req,res,next)=>{
+    const { fullName, email, department, phoneNo, entryDate, dateEmployed } = req.body;
+    const staffId = req.params.staffId;
+    Staff.findByPk(staffId)
+        .then((staff)=>{
+                staff.update({
+                    fullName,
+                    email,
+                    phoneNo,
+                    department,
+                    entryDate,
+                    dateEmployed
+                })
+                .then(staff => {
+                    res.json(staff);
+                }).catch((err)=>next(err))
+            
+        })
+        .catch(err =>
+            res
+                .status(500)
+                .json({ msg: "Staff does not exist", error: err })
+        );
 };

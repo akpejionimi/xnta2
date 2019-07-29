@@ -1,7 +1,7 @@
 const db = require("../config/database");
 const Sequelize = require("sequelize");
 
-class Operators extends Sequelize.Model{}
+class Operators extends Sequelize.Model { }
 Operators.init({
     operatorId: {
         type: Sequelize.INTEGER,
@@ -26,13 +26,14 @@ Operators.init({
         type: Sequelize.ENUM,
         values: ['SuperAdmin', 'Inputter', 'Authoriser'],
         defaultValue: 'Inputter'
-    } 
+    }
 
-}, {sequelize : db,
-});
+}, {
+        sequelize: db,
+    });
 
 //Staff Table
-class Staff extends Sequelize.Model{}
+class Staff extends Sequelize.Model { }
 Staff.init({
     staffId: {
         type: Sequelize.INTEGER,
@@ -75,16 +76,23 @@ Staff.init({
         }
     },
     dateEmployed: {
-        type: Sequelize.DATE
+        type:  Sequelize.DataTypes.DATEONLY,
+        get: function () {
+            return moment.utc(this.getDataValue('CreateDate')).format('YYYY-MM-DD')
+        }
     },
     entryDate: {
-        type: Sequelize.DATE
+        type:  Sequelize.DataTypes.DATEONLY,
+        get: function () {
+            return moment.utc(this.getDataValue('CreateDate')).format('YYYY-MM-DD')
+        }
     }
-}, {sequelize : db,
-});
+}, {
+        sequelize: db,
+    });
 
 //Customer Table
-class Customer extends Sequelize.Model{}
+class Customer extends Sequelize.Model { }
 Customer.init({
     customerId: {
         type: Sequelize.INTEGER,
@@ -131,11 +139,12 @@ Customer.init({
         allowNull: true
 
     }
-}, {sequelize : db,
-});
+}, {
+        sequelize: db,
+    });
 
 //Savings Table
-class Savings_Products extends Sequelize.Model{}
+class Savings_Products extends Sequelize.Model { }
 Savings_Products.init({
     productId: {
         type: Sequelize.INTEGER,
@@ -163,10 +172,11 @@ Savings_Products.init({
         type: Sequelize.DATE
     }
 
-}, {sequelize : db,
-});
+}, {
+        sequelize: db,
+    });
 //Product Signup Table
-class Product_Sign_up extends Sequelize.Model{}
+class Product_Sign_up extends Sequelize.Model { }
 Product_Sign_up.init({
     productSignId: {
         type: Sequelize.INTEGER,
@@ -177,11 +187,12 @@ Product_Sign_up.init({
         type: Sequelize.DATE
     }
 
-}, {sequelize : db,
-});
+}, {
+        sequelize: db,
+    });
 
 //Product Payment Table
-class Product_Payment extends Sequelize.Model{}
+class Product_Payment extends Sequelize.Model { }
 Product_Payment.init({
     productPaymentId: {
         type: Sequelize.INTEGER,
@@ -208,10 +219,11 @@ Product_Payment.init({
     authoriserId: {
         type: Sequelize.INTEGER
     }
-}, {sequelize : db,
-});
+}, {
+        sequelize: db,
+    });
 //Fiscal Year Table
-class Fiscal_Year extends Sequelize.Model{}
+class Fiscal_Year extends Sequelize.Model { }
 Fiscal_Year.init({
     fiscalYearId: {
         type: Sequelize.INTEGER,
@@ -228,12 +240,13 @@ Fiscal_Year.init({
     dateCreated: {
         type: Sequelize.DATE
     }
-}, {sequelize : db,
-});
+}, {
+        sequelize: db,
+    });
 
 //Fiscal Month Table
 
-class Fiscal_Month extends Sequelize.Model{}
+class Fiscal_Month extends Sequelize.Model { }
 Fiscal_Month.init({
     fiscalMonthId: {
         type: Sequelize.INTEGER,
@@ -250,8 +263,9 @@ Fiscal_Month.init({
     dateCreated: {
         type: Sequelize.DATE
     }
-}, {sequelize : db,
-});
+}, {
+        sequelize: db,
+    });
 
 
 //Association( realtionship between tables)

@@ -6,7 +6,7 @@ const { Staff } = require('../models/operatorModel');
 exports.getStaff = (req, res, next) => {
     Staff.findAll()
         .then((staff) => {
-            console.log(staff);
+            // console.log(staff);
             res.json(staff)
         })
         .catch(err => res.json({
@@ -15,24 +15,51 @@ exports.getStaff = (req, res, next) => {
 }
 //Get single staff by its id
 
+// exports.getStaffById = (req, res, next) => {
+//     const staffId = req.params.staffId;
+//     Staff.findByPk(staffId)
+//         .then(staff => {
+//             if (!staff) {
+//                 res.status(404).json({ success: false, msg: "staff not Found" });
+//             } else {
+//                 res.json(staff);
+//             }
+//         })
+//         .catch(err => next(err));
+// };
 exports.getStaffById = (req, res) => {
-	const staffId = req.params.staffId;
-	Staff.findByPk(staffId)
-		.then(staff => {
-			if (!staff) {
-				const error = new Error("staff not found");
-				error.statusCode = 404;
-				next(error);
-			} else {
-				res.json(staff);
-			}
-		})
-		.catch(err => next(err));
+    const staffId = req.params.staffId;
+
+    Staff.findOne({
+        where: {
+            staffId: staffId
+        },
+        include: [
+            {
+                all: true,
+                attributes: { exclude: ["createdAt", "updatedAt"] }
+            }
+        ]
+    })
+        .then(staff => {
+            if (!staff) {
+                res.status(404).json({ success: false, msg: "staff not Found" });
+            } else {
+                res.json(staff);
+            }
+        })
+        .catch(err =>
+            res.status(500).json({
+                success: false,
+                msg: "Something went wrong while getting the staff"
+            })
+        );
 };
 
 
+
 exports.postAddStaff = (req, res, next) => {
-    const { staffId, fullName, email, department, phoneNo, entryDate,dateEmployed } = req.body;
+    const { staffId, fullName, email, department, phoneNo, entryDate, dateEmployed } = req.body;
     if (!fullName || !department || !phoneNo) {
         res.status(400).json({ msg: 'All fields are required' });
 
@@ -54,29 +81,52 @@ exports.postAddStaff = (req, res, next) => {
                     department,
                     entryDate,
                     dateEmployed
-                    
+
                 })
-                .then((staff => {
-                    res.json({
-                        staff,
-                        success: true
-                    });
-                }))
-                .catch((err) => res.json({
-                    msg: "something went wrong",
-                    Error: err
-                }));
+                    .then((staff => {
+                        res.json({
+                            staff,
+                            success: true
+                        });
+                    }))
+                    .catch((err) => res.json({
+                        msg: "something went wrong",
+                        Error: err
+                    }));
             }
         })
     }
 
-
+    exports.postUpdateStaff=(req,res,next)=>{
+        const { fullName, email, department, phoneNo, entryDate, dateEmployed } = req.body;
+        const staffId = req.params.staffId;
+        Staff.findByPk(staffId)
+            .then((staff)=>{
+                    staff.update({
+                        fullName,
+                        email,
+                        phoneNo,
+                        department,
+                        entryDate,
+                        dateEmployed
+                    })
+                    .then(staff => {
+                        res.json(staff);
+                    }).catch((err)=>next(err))
+                
+            })
+            .catch(err =>
+                res
+                    .status(500)
+                    .json({ msg: "Staff does not exist", error: err })
+            );
+    };
 
     // exports.postAddStaff = (req, res, next) => {
     //     const { staffId, fullName, password, email, department, phoneNo } = req.body;
     //     if (!fullName || !password || !department || !phoneNo) {
     //         res.status(400).json({ msg: 'All fields are required' });
-    
+
     //     } else {
     //         Staff.findOne({
     //             where: {
