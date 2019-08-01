@@ -23,7 +23,7 @@ exports.postAddCustomers = (req, res, next) => {
     function random_num() { return Math.random().toString().slice(2, 11); }
     accNum = random_num();
 
-    const { fullName, email, phoneNo ,registrationDate,entryDate} = req.body;
+    const { fullName, email, phoneNo ,registrationDate,entryDate,status,gender} = req.body;
     if (!fullName || !phoneNo) {
         res.status(400).json({ msg: 'All fields are required' });
     } else {
@@ -33,7 +33,9 @@ exports.postAddCustomers = (req, res, next) => {
             phoneNo,
             accountNo: accNum,
             entryDate,
-            registrationDate
+            registrationDate,
+            status,
+            gender
 
         })
             .then((customer => {
@@ -82,7 +84,7 @@ exports.getCustomerById = (req, res) => {
 };
 
 exports.postUpdateCustomer=(req,res,next)=>{
-	const { fullName, email, phoneNo ,registrationDate,entryDate } = req.body;
+	const { fullName, email, phoneNo ,registrationDate,entryDate, status, gender } = req.body;
 	const customerId = req.params.customerId;
 	Customer.findByPk(customerId)
 		.then((customer)=>{
@@ -90,8 +92,10 @@ exports.postUpdateCustomer=(req,res,next)=>{
                     fullName,
                     email,
                     phoneNo,
+                    gender,
                     entryDate,
-                    registrationDate
+                    registrationDate,
+                    status
 				})
 				.then(customer => {
 					res.json(customer);

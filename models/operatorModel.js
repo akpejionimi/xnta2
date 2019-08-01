@@ -1,5 +1,6 @@
 const db = require("../config/database");
 const Sequelize = require("sequelize");
+const moment = require("moment");
 
 class Operators extends Sequelize.Model { }
 Operators.init({
@@ -63,29 +64,40 @@ Staff.init({
         values: ['Operations', 'Sales', 'Administration'],
         defaultValue: 'Operations'
     },
+    status: {
+        type: Sequelize.ENUM,
+        values: ['Active', 'Inactive', 'Pending'],
+        defaultValue: 'Active'
+    },
     phoneNo: {
         type: Sequelize.STRING,
         allowNull: false,
         unique: true,
         validate: {
-            // min: 0,
-            // max: 11,
             notNull: {
                 msg: 'Enter Phone number'
             }
         }
     },
+    status: {
+        type: Sequelize.ENUM,
+        values: ['Active', 'Inactive', 'Pending'],
+        defaultValue: 'Active'
+    },
+    gender: {
+        type: Sequelize.ENUM,
+        values: ['Male', 'Female'],
+        defaultValue: 'Male'
+    },
     dateEmployed: {
-        type:  Sequelize.DataTypes.DATEONLY,
-        get: function () {
-            return moment.utc(this.getDataValue('CreateDate')).format('YYYY-MM-DD')
-        }
+        type: Sequelize.DATE,
+        allowNull: true
+        
     },
     entryDate: {
-        type:  Sequelize.DataTypes.DATEONLY,
-        get: function () {
-            return moment.utc(this.getDataValue('CreateDate')).format('YYYY-MM-DD')
-        }
+        type: Sequelize.DATE,
+        allowNull: true
+
     }
 }, {
         sequelize: db,
@@ -129,6 +141,16 @@ Customer.init({
                 msg: 'Enter Phone number'
             }
         }
+    },
+    status: {
+        type: Sequelize.ENUM,
+        values: ['Active', 'Inactive', 'Pending'],
+        defaultValue: 'Active'
+    },
+    gender: {
+        type: Sequelize.ENUM,
+        values: ['Male', 'Female'],
+        defaultValue: 'Male'
     },
     registrationDate: {
         type: Sequelize.DATE,
