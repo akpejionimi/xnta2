@@ -1,8 +1,8 @@
-const { Operators } = require("../models/operatorModel");
 
 const bcrypt = require('bcrypt');
 const jwt = require("jsonwebtoken");
 
+const { Operators } = require("../models/operatorModel");
 
 exports.postLogin = (req, res, next) => {
     const { userName, password } = req.body;

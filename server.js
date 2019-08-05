@@ -14,12 +14,14 @@ const operatorRoutes = require('./routes/api/operator');
 const loginRoutes = require('./routes/api/auth');
 const staffRoutes = require('./routes/api/staff');
 const customerRoutes = require('./routes/api/customer')
+const savingsProductRoutes = require('./routes/api/savingsProduct')
 
 //Routes
 app.use("/api/operator", operatorRoutes);
 app.use("/api/login", loginRoutes)
 app.use("/api/staff", staffRoutes)
 app.use('/api/customer', customerRoutes)
+app.use('/api/savings-product', savingsProductRoutes)
 
 // PORT
 const PORT = process.env.PORT || 5000;

@@ -92,7 +92,6 @@ Staff.init({
     dateEmployed: {
         type: Sequelize.DATE,
         allowNull: true
-        
     },
     entryDate: {
         type: Sequelize.DATE,
@@ -180,27 +179,23 @@ Savings_Products.init({
         type: Sequelize.DOUBLE(11, 2)
     },
     productDuration: {
-        type: Sequelize.INTEGER,
-        validate: {
-            min: 0,
-            max: 2
-        }
+        type: Sequelize.INTEGER(4).ZEROFILL
+        
     },
-    productLogo: {
-        type: Sequelize.STRING,
-        allowNull: true
-    },
-    creationDate: {
-        type: Sequelize.DATE
-    }
+    // productLogo: {
+    //     type: Sequelize.STRING,
+    //     allowNull: true
+    // }
 
 }, {
         sequelize: db,
     });
-//Product Signup Table
-class Product_Sign_up extends Sequelize.Model { }
-Product_Sign_up.init({
-    productSignId: {
+
+//Product Subscription Table
+
+class ProductSubscription extends Sequelize.Model { }
+ProductSubscription .init({
+    ProductSubId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -292,8 +287,8 @@ Fiscal_Month.init({
 
 //Association( realtionship between tables)
 Staff.hasOne(Operators);
-Customer.hasOne(Product_Sign_up);
-Savings_Products.hasOne(Product_Sign_up);
+Customer.hasOne(ProductSubscription );
+Savings_Products.hasOne(ProductSubscription );
 Fiscal_Year.belongsTo(Fiscal_Month)
 
 //Export all tables to controller
@@ -302,7 +297,7 @@ module.exports = {
     Staff,
     Customer,
     Savings_Products,
-    Product_Sign_up,
+    ProductSubscription ,
     Product_Payment,
     Fiscal_Year,
     Fiscal_Month

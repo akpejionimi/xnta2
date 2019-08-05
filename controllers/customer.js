@@ -11,7 +11,7 @@ exports.getAllCustomer = (req, res) => {
         ]
     })
         .then(customers => {
-            console.log(customers);
+            // console.log(customers);
             res.json(customers);
         })
         .catch(err => console.log(err))
@@ -39,12 +39,8 @@ exports.postAddCustomers = (req, res, next) => {
 
         })
             .then((customer => {
-                console.log(customer);
-                
-                res.json({
-                    customer,
-                    success: true
-                });
+                // console.log(customer);       
+                res.json(customer);
             }))
             .catch((err) => res.status(400).send({
                 msg: "something went wrong",
