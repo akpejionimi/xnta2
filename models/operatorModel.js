@@ -2,37 +2,6 @@ const db = require("../config/database");
 const Sequelize = require("sequelize");
 const moment = require("moment");
 
-class Operators extends Sequelize.Model { }
-Operators.init({
-    operatorId: {
-        type: Sequelize.INTEGER,
-        primaryKey: true,
-        autoIncrement: true
-    },
-    userName: {
-        type: Sequelize.STRING,
-        allowNull: false,
-        unique: true,
-        validate: {
-            notNull: {
-                msg: 'Enter username'
-            }
-        }
-    },
-    password: {
-        type: Sequelize.STRING,
-        allowNull: false
-    },
-    operatorLevel: {
-        type: Sequelize.ENUM,
-        values: ['SuperAdmin', 'Inputter', 'Authoriser'],
-        defaultValue: 'Inputter'
-    }
-
-}, {
-        sequelize: db,
-    });
-
 //Staff Table
 class Staff extends Sequelize.Model { }
 Staff.init({
@@ -101,6 +70,47 @@ Staff.init({
 }, {
         sequelize: db,
     });
+
+//Operator Table
+class Operators extends Sequelize.Model { }
+Operators.init({
+    operatorId: {
+        type: Sequelize.INTEGER,
+        primaryKey: true,
+        autoIncrement: true
+    },
+    userName: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+            notNull: {
+                msg: 'Enter username'
+            }
+        }
+    },
+    password: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
+    operatorLevel: {
+        type: Sequelize.ENUM,
+        values: ['SuperAdmin', 'Inputter', 'Authoriser'],
+        defaultValue: 'Inputter'
+    },
+    staffId: {
+        type: Sequelize.INTEGER,
+        allowNull: true,
+        references: {
+            model: Staff,
+            key: 'staffId'
+        }
+    }
+    
+}, {
+        sequelize: db,
+    });
+
 
 //Customer Table
 class Customer extends Sequelize.Model { }
@@ -201,7 +211,24 @@ ProductSubscription .init({
         autoIncrement: true
     },
     signUpDate: {
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        get() {
+            return moment(this.getDataValue('signUpDate')).format('MM-DD-YYYY');
+        }
+    },
+    customerId: {
+        type: Sequelize.INTEGER,
+        references: {
+            model: Customer,
+            key: 'customerId'
+        }
+    },
+    productId: {
+        type: Sequelize.INTEGER,
+        references: {
+            model: Savings_Products,
+            key: 'productId'
+        }
     }
 
 }, {
@@ -286,10 +313,10 @@ Fiscal_Month.init({
 
 
 //Association( realtionship between tables)
-Staff.hasOne(Operators);
-Customer.hasOne(ProductSubscription );
-Savings_Products.hasOne(ProductSubscription );
-Fiscal_Year.belongsTo(Fiscal_Month)
+// Staff.hasOne(Operators, { foreignKey: 'staffId', allowNull: true  });
+// Customer.hasOne(ProductSubscription, { foreignKey: 'customerId' } );
+// Savings_Products.hasOne(ProductSubscription, { foreignKey: 'productId' } );
+Fiscal_Year.belongsTo(Fiscal_Month, { foreignKey: 'fiscalMonthId' })
 
 //Export all tables to controller
 module.exports = {

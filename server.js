@@ -13,8 +13,9 @@ app.use(express.json());
 const operatorRoutes = require('./routes/api/operator');
 const loginRoutes = require('./routes/api/auth');
 const staffRoutes = require('./routes/api/staff');
-const customerRoutes = require('./routes/api/customer')
-const savingsProductRoutes = require('./routes/api/savingsProduct')
+const customerRoutes = require('./routes/api/customer');
+const savingsProductRoutes = require('./routes/api/savingsProduct');
+const prodSubRoutes = require('./routes/api/prodSub');
 
 //Routes
 app.use("/api/operator", operatorRoutes);
@@ -22,6 +23,7 @@ app.use("/api/login", loginRoutes)
 app.use("/api/staff", staffRoutes)
 app.use('/api/customer', customerRoutes)
 app.use('/api/savings-product', savingsProductRoutes)
+app.use('/api/subs', prodSubRoutes)
 
 // PORT
 const PORT = process.env.PORT || 5000;
