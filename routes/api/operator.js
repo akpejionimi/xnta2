@@ -4,7 +4,8 @@ const router = express.Router();
 
 
 router.get("/",operatorController.getOperator );
-router.post("/",operatorController.postAddOperator);
+router.post("/",operatorController.postAddStaffAsOperator);
+
 //Admin Routes
 // router.get("/",operatorController.getOperator );
 // router.post("/",operatorController.postAddStaffAsAdmin);

@@ -8,7 +8,8 @@ Staff.init({
     staffId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncrement: true,
+        allowNull: true
     },
     fullName: {
         type: Sequelize.STRING,
@@ -19,10 +20,6 @@ Staff.init({
             }
         }
     },
-    // password: {
-    //     type: Sequelize.STRING,
-    //     allowNull: false
-    // },
     email: {
         type: Sequelize.STRING,
         allowNull: true,
@@ -97,16 +94,7 @@ Operators.init({
         type: Sequelize.ENUM,
         values: ['SuperAdmin', 'Inputter', 'Authoriser'],
         defaultValue: 'Inputter'
-    },
-    staffId: {
-        type: Sequelize.INTEGER,
-        allowNull: true,
-        references: {
-            model: Staff,
-            key: 'staffId'
-        }
     }
-    
 }, {
         sequelize: db,
     });
@@ -190,7 +178,7 @@ Savings_Products.init({
     },
     productDuration: {
         type: Sequelize.INTEGER(4).ZEROFILL
-        
+
     },
     // productLogo: {
     //     type: Sequelize.STRING,
@@ -204,7 +192,7 @@ Savings_Products.init({
 //Product Subscription Table
 
 class ProductSubscription extends Sequelize.Model { }
-ProductSubscription .init({
+ProductSubscription.init({
     ProductSubId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
@@ -213,24 +201,9 @@ ProductSubscription .init({
     signUpDate: {
         type: Sequelize.DATE,
         get() {
-            return moment(this.getDataValue('signUpDate')).format('MM-DD-YYYY');
+            return moment(this.getDataValue('signUpDate')).format('DD-MM-YYYY');
         }
     },
-    customerId: {
-        type: Sequelize.INTEGER,
-        references: {
-            model: Customer,
-            key: 'customerId'
-        }
-    },
-    productId: {
-        type: Sequelize.INTEGER,
-        references: {
-            model: Savings_Products,
-            key: 'productId'
-        }
-    }
-
 }, {
         sequelize: db,
     });
@@ -249,20 +222,26 @@ Product_Payment.init({
     paymentDate: {
         type: Sequelize.DATE
     },
-    inputerOperatorId: {
-        type: Sequelize.INTEGER
-    },
-    authoriserOperatorId: {
-        type: Sequelize.INTEGER
-    },
     authorised: {
         type: Sequelize.ENUM,
         values: ['Yes', 'No'],
         defaultValue: 'No'
     },
-    authoriserId: {
-        type: Sequelize.INTEGER
-    }
+    
+    // authoriser: {
+    //     type: Sequelize.INTEGER,
+    //     references: {
+    //         model: Operators,
+    //         key: 'authoriser'
+    //     }
+    // },
+    // inputterId: {
+    //     type: Sequelize.INTEGER,
+    //     references: {
+    //         model: Operators,
+    //         key: 'inputterId'
+    //     }
+    // }
 }, {
         sequelize: db,
     });
@@ -313,9 +292,19 @@ Fiscal_Month.init({
 
 
 //Association( realtionship between tables)
-// Staff.hasOne(Operators, { foreignKey: 'staffId', allowNull: true  });
-// Customer.hasOne(ProductSubscription, { foreignKey: 'customerId' } );
-// Savings_Products.hasOne(ProductSubscription, { foreignKey: 'productId' } );
+
+//Staff & Operator
+Staff.hasOne(Operators, { foreignKey: 'staffId'});
+
+//ProductSubscription & (customer/Products)
+ProductSubscription.belongsTo(Customer, { foreignKey: 'customerId' });
+ProductSubscription.belongsTo(Savings_Products, { foreignKey: 'productId' });
+
+//Payment & (customer/Products)
+Product_Payment.belongsTo(Customer, { foreignKey: 'customerId' });
+Product_Payment.belongsTo(Savings_Products, { foreignKey: 'productId' });
+
+//Fiscal Year & Fiscal Month
 Fiscal_Year.belongsTo(Fiscal_Month, { foreignKey: 'fiscalMonthId' })
 
 //Export all tables to controller
@@ -324,7 +313,7 @@ module.exports = {
     Staff,
     Customer,
     Savings_Products,
-    ProductSubscription ,
+    ProductSubscription,
     Product_Payment,
     Fiscal_Year,
     Fiscal_Month

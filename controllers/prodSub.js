@@ -1,13 +1,22 @@
 const { Customer, ProductSubscription, Savings_Products } = require("../models/operatorModel")
-
-//Get all Subscriptions
+const Sequelize = require("sequelize");
+// Get all Subscriptions
 
 exports.getAllProdSubs = (req, res, next) => {
 	ProductSubscription.findAll({
 		include: [
 			{
+				model: Savings_Products,
 				all: true,
-				attributes: { exclude: ["createdAt", "updatedAt"] }
+                attributes: { exclude: ["productId","createdAt", "updatedAt","moneyValue","productDuration"] },
+				// where: { productId: Sequelize.col('ProductSubscription.productId')}
+			},
+			{
+				model: Customer,
+				all: true,
+                attributes: { exclude: ["customerId","createdAt", "updatedAt","registrationDate","email","accountNo","entryDate","status","gender","phoneNo"] },
+				// where: { customerId: Sequelize.col('ProductSubscription.customerId')  }
+				
 			}
 		]
 	})
@@ -17,15 +26,22 @@ exports.getAllProdSubs = (req, res, next) => {
 		.catch(err => next(err));
 };
 
-exports.getAllProdSubs = (req, res, next) => {
-	ProductSubscription.findAll({
-		
-	})
-		.then(prodSubs => {
-			res.json(prodSubs);
-		})
-		.catch(err => next(err));
-};
+// exports.getAllProdSubs = (req, res, next) => {
+// 	const productId = req.params.productId
+// 	Savings_Products.findAll({
+
+// 	})
+// 	.then(productId => {
+// 		res.json(productId)
+// 	})
+// 	ProductSubscription.findAll({
+
+// 	})
+// 		.then(prodSubs => {
+// 			res.json(prodSubs);
+// 		})
+// 		.catch(err => next(err));
+// };
 /**
  * Gets a Single ProdSub by its id
  */
