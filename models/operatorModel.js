@@ -99,7 +99,6 @@ Operators.init({
         sequelize: db,
     });
 
-
 //Customer Table
 class Customer extends Sequelize.Model { }
 Customer.init({
@@ -156,7 +155,6 @@ Customer.init({
     entryDate: {
         type: Sequelize.DATE,
         allowNull: true
-
     }
 }, {
         sequelize: db,
@@ -190,10 +188,9 @@ Savings_Products.init({
     });
 
 //Product Subscription Table
-
 class ProductSubscription extends Sequelize.Model { }
 ProductSubscription.init({
-    ProductSubId: {
+    prodSubId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -211,7 +208,7 @@ ProductSubscription.init({
 //Product Payment Table
 class Product_Payment extends Sequelize.Model { }
 Product_Payment.init({
-    productPaymentId: {
+    paymentId: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncrement: true
@@ -227,7 +224,7 @@ Product_Payment.init({
         values: ['Yes', 'No'],
         defaultValue: 'No'
     },
-    
+
     // authoriser: {
     //     type: Sequelize.INTEGER,
     //     references: {
@@ -245,6 +242,7 @@ Product_Payment.init({
 }, {
         sequelize: db,
     });
+
 //Fiscal Year Table
 class Fiscal_Year extends Sequelize.Model { }
 Fiscal_Year.init({
@@ -268,7 +266,6 @@ Fiscal_Year.init({
     });
 
 //Fiscal Month Table
-
 class Fiscal_Month extends Sequelize.Model { }
 Fiscal_Month.init({
     fiscalMonthId: {
@@ -290,19 +287,19 @@ Fiscal_Month.init({
         sequelize: db,
     });
 
-
 //Association( realtionship between tables)
 
 //Staff & Operator
-Staff.hasOne(Operators, { foreignKey: 'staffId'});
+Staff.hasOne(Operators, { foreignKey: 'staffId' });
 
 //ProductSubscription & (customer/Products)
 ProductSubscription.belongsTo(Customer, { foreignKey: 'customerId' });
 ProductSubscription.belongsTo(Savings_Products, { foreignKey: 'productId' });
 
 //Payment & (customer/Products)
-Product_Payment.belongsTo(Customer, { foreignKey: 'customerId' });
-Product_Payment.belongsTo(Savings_Products, { foreignKey: 'productId' });
+// Product_Payment.belongsTo(Customer, { foreignKey: 'customerId' });
+// Product_Payment.belongsTo(Savings_Products, { foreignKey: 'productId' });
+Product_Payment.belongsTo(ProductSubscription, { foreignKey: 'prodSubId' });
 
 //Fiscal Year & Fiscal Month
 Fiscal_Year.belongsTo(Fiscal_Month, { foreignKey: 'fiscalMonthId' })

@@ -6,6 +6,7 @@ const { Staff } = require('../models/operatorModel');
 exports.getAllStaff = (req, res) => {
     // GET ALL Staff IN DATABASE
     Staff.findAll({
+        order: [['fullName', 'ASC']],
         include: [
             {
                 all: true,
@@ -20,10 +21,8 @@ exports.getAllStaff = (req, res) => {
         .catch(err => console.log(err))
 }
 
-
 exports.getStaffById = (req, res) => {
     const staffId = req.params.staffId;
-
     Staff.findOne({
         where: {
             staffId: staffId
@@ -50,13 +49,10 @@ exports.getStaffById = (req, res) => {
         );
 };
 
-
-
 exports.postAddStaff = (req, res, next) => {
     const { staffId, fullName, email, department, phoneNo, entryDate, dateEmployed, gender, status } = req.body;
     if (!fullName || !department || !phoneNo) {
         res.status(400).json({ msg: 'All fields are required' });
-
     } else {
         Staff.findOne({
             where: {
@@ -77,7 +73,6 @@ exports.postAddStaff = (req, res, next) => {
                     department,
                     entryDate,
                     dateEmployed
-
                 })
                     .then((staff => {
                         res.json({
@@ -89,10 +84,10 @@ exports.postAddStaff = (req, res, next) => {
                         msg: "something went wrong",
                         Error: err
                     }));
-            }
-        })
-    }
-}
+            };
+        });
+    };
+};
 
 exports.postUpdateStaff = (req, res, next) => {
     const { fullName, email, department, phoneNo, entryDate, dateEmployed, gender, status } = req.body;
@@ -120,6 +115,7 @@ exports.postUpdateStaff = (req, res, next) => {
                 .json({ msg: "Staff does not exist", error: err })
         );
 };
+
 exports.deleteStaff = (req, res) => {
     const staffId = req.params.staffId;
     Staff.findByPk(staffId)
@@ -131,8 +127,7 @@ exports.deleteStaff = (req, res) => {
                     res.json({ success: true });
                 })
                 .catch(err => res.json({ success: false }));
-        }
-        )
+        })
         .catch(err =>
             res.json({ success: false, msg: "This staff doesnt exists" })
         );

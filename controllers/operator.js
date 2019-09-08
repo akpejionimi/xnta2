@@ -6,21 +6,17 @@ const jwt = require('jsonwebtoken');
 exports.getOperator = (req, res, next) => {
     Operators.findAll()
         .then((operators) => {
-            // console.log(operators);
             res.json(operators)
         })
         .catch(err => res.json({
             success: false
-        }))
+        }));
 }
-
-
 
 exports.postAddStaffAsOperator = (req, res, next) => {
     const { operatorId, userName, password, operatorLevel, staffId } = req.body;
     if (!userName || !password || !operatorLevel) {
         res.status(400).json({ msg: 'All fields are required' });
-
     } else {
         Operators.findOne({
             where: {
@@ -74,10 +70,10 @@ exports.postAddStaffAsOperator = (req, res, next) => {
                     .catch((err) => res.status(500).json({ msg: "something went wrong" }))
 
             }
-        })
+        });
 
-    }
-}
+    };
+};
 
 
 // exports.postAddOperator = (req, res, next) => {

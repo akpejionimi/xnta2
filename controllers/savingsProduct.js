@@ -1,8 +1,8 @@
 const { Savings_Products } = require("../models/operatorModel");
 
 exports.getAllSavingsProducts = (req, res) => {
-
     Savings_Products.findAll({
+        order: [['productName', 'ASC']],
         include: [
             {
                 all: true,
@@ -14,7 +14,7 @@ exports.getAllSavingsProducts = (req, res) => {
             res.json(savingsProducts);
         })
         .catch(err => console.log(err))
-}
+};
 
 //Create Savings Products
 exports.postAddSavingsProducts = (req, res, next) => {
@@ -26,7 +26,6 @@ exports.postAddSavingsProducts = (req, res, next) => {
             productName,
             productDuration,
             moneyValue
-
         })
             .then((savingsProducts => {
                 res.json(savingsProducts);
@@ -35,9 +34,9 @@ exports.postAddSavingsProducts = (req, res, next) => {
                 msg: "something went wrong",
                 Error: err
             }));
-    }
+    };
 
-}
+};
 
 exports.getSavingsProductById = (req, res) => {
     const productId = req.params.productId;
@@ -74,7 +73,6 @@ exports.postUpdateSavingsProduct = (req, res, next) => {
                 .then(product => {
                     res.json(product);
                 }).catch((err) => next(err))
-
         })
         .catch(err =>
             res
@@ -93,8 +91,7 @@ exports.deleteSavingsProduct = (req, res) => {
                     res.json({ success: true });
                 })
                 .catch(err => res.json({ success: false }));
-        }
-        )
+        })
         .catch(err =>
             res.json({ success: false, msg: "This product doesnt exists" })
         );

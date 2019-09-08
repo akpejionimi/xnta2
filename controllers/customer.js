@@ -1,8 +1,9 @@
 const { Customer } = require("../models/operatorModel");
 
+// GET ALL Customer IN DATABASE
 exports.getAllCustomer = (req, res) => {
-    // GET ALL Customer IN DATABASE
     Customer.findAll({
+        order: [['fullName', 'ASC']],
         include: [
             {
                 all: true,
@@ -11,11 +12,10 @@ exports.getAllCustomer = (req, res) => {
         ]
     })
         .then(customers => {
-            // console.log(customers);
             res.json(customers);
         })
         .catch(err => console.log(err))
-}
+};
 
 //Create customers
 exports.postAddCustomers = (req, res, next) => {
@@ -38,17 +38,16 @@ exports.postAddCustomers = (req, res, next) => {
             gender
 
         })
-            .then((customer => {
-                // console.log(customer);       
+            .then((customer => {      
                 res.json(customer);
             }))
             .catch((err) => res.status(400).send({
                 msg: "something went wrong",
                 Error: err
             }));
-    }
+    };
 
-}
+};
 
 exports.getCustomerById = (req, res) => {
     const customerId = req.params.customerId;
@@ -57,7 +56,7 @@ exports.getCustomerById = (req, res) => {
         where: {
             customerId: customerId
         },
-        include: [
+        include: [  
             {
                 all: true,
                 attributes: { exclude: ["createdAt", "updatedAt"] }

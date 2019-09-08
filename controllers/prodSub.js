@@ -1,22 +1,18 @@
 const { Customer, ProductSubscription, Savings_Products } = require("../models/operatorModel")
-const Sequelize = require("sequelize");
-// Get all Subscriptions
 
+// Get all Subscriptions
 exports.getAllProdSubs = (req, res, next) => {
-	ProductSubscription.findAll({
+	ProductSubscription.findAll({	
 		include: [
 			{
 				model: Savings_Products,
 				all: true,
-                attributes: { exclude: ["productId","createdAt", "updatedAt","moneyValue","productDuration"] },
-				// where: { productId: Sequelize.col('ProductSubscription.productId')}
+				attributes: { exclude: ["productId", "createdAt", "updatedAt", "moneyValue", "productDuration"] }
 			},
 			{
 				model: Customer,
 				all: true,
-                attributes: { exclude: ["customerId","createdAt", "updatedAt","registrationDate","email","accountNo","entryDate","status","gender","phoneNo"] },
-				// where: { customerId: Sequelize.col('ProductSubscription.customerId')  }
-				
+				attributes: { exclude: ["customerId", "createdAt", "updatedAt", "registrationDate", "email", "accountNo", "entryDate", "status", "gender", "phoneNo"] }
 			}
 		]
 	})
@@ -26,28 +22,52 @@ exports.getAllProdSubs = (req, res, next) => {
 		.catch(err => next(err));
 };
 
-// exports.getAllProdSubs = (req, res, next) => {
-// 	const productId = req.params.productId
-// 	Savings_Products.findAll({
+exports.getSameCustomers = (req, res, next) => {
+	const customerId = req.params.customerId
+	ProductSubscription.findAll({
+		where: {
+			customerId: customerId
+		},
+		include: [
+			{
+				model: Savings_Products,
+				all: true,
+				attributes: { exclude: ["productId", "createdAt", "updatedAt", "productDuration"] },
+			},
+			{
+				model: Customer,
+				all: true,
+				attributes: { exclude: ["customerId", "createdAt", "updatedAt", "registrationDate", "email", "entryDate", "status", "gender"] }
+			}
+		]
+	})
+		.then(prodSubs => {
+			res.json(prodSubs);
+		})
+		.catch(err => next(err));
+};
 
-// 	})
-// 	.then(productId => {
-// 		res.json(productId)
-// 	})
-// 	ProductSubscription.findAll({
-
-// 	})
-// 		.then(prodSubs => {
-// 			res.json(prodSubs);
-// 		})
-// 		.catch(err => next(err));
-// };
-/**
- * Gets a Single ProdSub by its id
- */
+//  Gets a Single ProdSub by its id
 exports.getProSubById = (req, res) => {
 	const prodSubId = req.params.prodSubId;
-	ProductSubscription.findByPk(prodSubId)
+	ProductSubscription.findOne({
+		where: {
+			prodSubId: prodSubId
+		},
+		include: [
+			{
+				model: Savings_Products,
+				all: true,
+				attributes: { exclude: ["productId"] },
+			},
+			{
+				model: Customer,
+				all: true,
+				attributes: { exclude: ["customerId"] },
+			}
+
+		]
+	})
 		.then(prodSub => {
 			if (!prodSub) {
 				const error = new Error("Subscription not found");
@@ -62,7 +82,6 @@ exports.getProSubById = (req, res) => {
 
 //Get created products and customers and then create Subscription 
 exports.postProdSub = (req, res, next) => {
-	// const customerId = req.params.id;
 	const { signUpDate, customerId, productId } = req.body;
 	if (!signUpDate) {
 		res.status(400).json({ msg: 'Date required' });
@@ -99,8 +118,8 @@ exports.postProdSub = (req, res, next) => {
 				})
 			}
 		})
-	}
-}
+	};
+};
 
 // Edit product
 exports.postUpdateProduct = (req, res, next) => {

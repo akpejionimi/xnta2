@@ -40,8 +40,7 @@ exports.postLogin = (req, res, next) => {
                     })
             }).catch(err => next(err))
     }
-}
-
+};
 
 exports.getCurrentUser = (req, res, next) => {
     const userId = req.userId;
