@@ -1,8 +1,8 @@
 const Sequelize = require("sequelize");
 
-const { Customer, ProductSubscription, 
-	Savings_Products, 
-	Product_Payment 
+const { Customer, ProductSubscription,
+	Savings_Products,
+	Product_Payment
 } = require("../models/operatorModel")
 
 // Get all Payments
@@ -12,7 +12,7 @@ exports.getAllPayments = (req, res, next) => {
 			{
 				model: ProductSubscription,
 				all: true,
-				attributes: { exclude: ["paymentId", "createdAt", "updatedAt", "paymentValue","authorised"] },
+				attributes: { exclude: ["paymentId", "createdAt", "updatedAt", "paymentValue", "authorised"] },
 				include: [
 					{
 						model: Savings_Products,
@@ -38,14 +38,14 @@ exports.getAllPayments = (req, res, next) => {
 exports.getPaymentById = (req, res, next) => {
 	const paymentId = req.params.paymentId;
 	Product_Payment.findByPk({
-        where: {
-           paymentId: paymentId
-        },
-        include: [
-            {
+		where: {
+			paymentId: paymentId
+		},
+		include: [
+			{
 				model: ProductSubscription,
 				all: true,
-				attributes: { exclude: ["paymentId", "createdAt", "updatedAt", "paymentValue","authorised"] },
+				attributes: { exclude: ["paymentId", "createdAt", "updatedAt", "paymentValue", "authorised"] },
 				include: [
 					{
 						model: Savings_Products,
@@ -60,7 +60,7 @@ exports.getPaymentById = (req, res, next) => {
 				]
 			}
 		]
-    })
+	})
 		.then(payment => {
 			if (!payment) {
 				const error = new Error("Payment not found");
@@ -75,8 +75,9 @@ exports.getPaymentById = (req, res, next) => {
 
 //Get created products and customers and then create Payment 
 exports.postPayment = (req, res, next) => {
-	const {prodSubId, paymentValue, paymentDate, authorised} = req.body;
-	if (!authorised || !paymentDate || !paymentValue) {
+	const { paymentValue } = req.body;
+	const prodSubId = req.params.prodSubId;
+	if ( !paymentValue) {
 		res.status(400).json({ msg: 'All field required' });
 	} else {
 		ProductSubscription.findOne({
@@ -87,15 +88,22 @@ exports.postPayment = (req, res, next) => {
 			if (!prodSub) {
 				res.status(404).json({ success: false, msg: "Subscription not Found" })
 			} else {
-				Product_Payment.create({
-					prodSubId,
-					authorised,
-					paymentDate,
-					paymentValue
+				ProductSubscription.findAll({
+					where: {
+						prodSubId:prodSubId
+					}
 				})
-					.then((prodSub => {
-						res.json(prodSub)
-					}))
+					.then((payment) => {
+						Product_Payment.create({
+							prodSubId,
+							// authorised,
+							// paymentDate,
+							paymentValue
+						})
+							.then((prodSub => {
+								res.json(prodSub)
+							}))
+					})
 					.catch((err) => res.status(400).send({
 						msg: "something went wrong",
 						Error: err

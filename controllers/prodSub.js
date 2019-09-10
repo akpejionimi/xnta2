@@ -12,7 +12,7 @@ exports.getAllProdSubs = (req, res, next) => {
 			{
 				model: Customer,
 				all: true,
-				attributes: { exclude: ["customerId", "createdAt", "updatedAt", "registrationDate", "email", "accountNo", "entryDate", "status", "gender", "phoneNo"] }
+				attributes: { exclude: ["customerId", "createdAt", "updatedAt", "registrationDate", "email", "entryDate", "status", "gender", "phoneNo"] }
 			}
 		]
 	})
