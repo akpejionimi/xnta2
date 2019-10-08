@@ -1,4 +1,4 @@
-const Sequelize = require("sequelize");
+const sequelize = require("sequelize");
 
 const { Customer, ProductSubscription,
 	Savings_Products,
@@ -77,7 +77,7 @@ exports.getPaymentById = (req, res, next) => {
 exports.postPayment = (req, res, next) => {
 	const { paymentValue } = req.body;
 	const prodSubId = req.params.prodSubId;
-	if ( !paymentValue) {
+	if (!paymentValue) {
 		res.status(400).json({ msg: 'All field required' });
 	} else {
 		ProductSubscription.findOne({
@@ -90,7 +90,7 @@ exports.postPayment = (req, res, next) => {
 			} else {
 				ProductSubscription.findAll({
 					where: {
-						prodSubId:prodSubId
+						prodSubId: prodSubId
 					}
 				})
 					.then((payment) => {
@@ -113,6 +113,23 @@ exports.postPayment = (req, res, next) => {
 
 	}
 }
+
+exports.getSumPaymentById = (req, res, next) => {
+	const prodSubId = req.params.prodSubId;
+	Product_Payment.findAll({
+		where: {
+			prodSubId: prodSubId
+		},
+		attributes: [[sequelize.fn('sum', sequelize.col('paymentValue')), 'paymentValue']],
+		// group : ['product_payment.prodSubId'],
+		raw: true,
+		// order: sequelize.literal('total DESC')
+	})
+}
+//   .then(function () {
+//     return Product_Payment.findAll({where: {prodSubId: 1}});
+// })
+
 // Edit Payment
 // exports.postUpdateProduct = (req, res, next) => {
 // 	const { signUpDate, customerId, productId } = req.body;
