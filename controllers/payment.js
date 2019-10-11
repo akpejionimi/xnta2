@@ -75,44 +75,50 @@ exports.getPaymentById = (req, res, next) => {
 
 //Get created products and customers and then create Payment 
 exports.postPayment = (req, res, next) => {
-	const { paymentValue } = req.body;
+	const { paymentValue, authorised, paymentDate } = req.body;
 	const prodSubId = req.params.prodSubId;
 	if (!paymentValue) {
 		res.status(400).json({ msg: 'All field required' });
 	} else {
-		ProductSubscription.findOne({
-			where: {
-				prodSubId
-			}
-		}).then(prodSub => {
-			if (!prodSub) {
-				res.status(404).json({ success: false, msg: "Subscription not Found" })
-			} else {
-				ProductSubscription.findAll({
-					where: {
-						prodSubId: prodSubId
-					}
+		ProductSubscription.findByPk(prodSubId)
+			.then(() => {
+				Product_Payment.create({
+					prodSubId,
+					paymentValue,
+					authorised,
+					paymentDate
 				})
-					.then((payment) => {
-						Product_Payment.create({
-							prodSubId,
-							// authorised,
-							// paymentDate,
-							paymentValue
-						})
-							.then((prodSub => {
-								res.json(prodSub)
-							}))
-					})
-					.catch((err) => res.status(400).send({
-						msg: "something went wrong",
-						Error: err
-					}));
-			}
-		})
-
+					.then((prodSub => {
+						res.json(prodSub)
+					}))
+			})
+			.catch((err) => res.status(400).send({
+				msg: "something went wrong",
+				Error: err
+			}));
 	}
 }
+
+// exports.postPayment = (req, res, next) => {
+// 	const { paymentValue } = req.body;
+// 	const prodSubId = req.params.prodSubId;
+// 	Product_Payment.findByPk(prodSubId)
+// 		.then(() => {
+// 			Product_Payment.create({
+// 				prodSubId,
+// 				paymentValue,
+// 			})
+// 				.then(payment => {
+// 					res.json(payment);
+// 				}).catch((err) => next(err))
+
+// 		})
+// 		.catch(err =>
+// 			res
+// 				.status(500)
+// 				.json({ msg: "Payment error", error: err })
+// 		);
+// };
 
 exports.getSumPaymentById = (req, res, next) => {
 	const prodSubId = req.params.prodSubId;
@@ -129,6 +135,10 @@ exports.getSumPaymentById = (req, res, next) => {
 //   .then(function () {
 //     return Product_Payment.findAll({where: {prodSubId: 1}});
 // })
+
+
+
+
 
 // Edit Payment
 // exports.postUpdateProduct = (req, res, next) => {

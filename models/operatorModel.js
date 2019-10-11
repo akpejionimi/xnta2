@@ -215,17 +215,17 @@ Product_Payment.init({
     paymentValue: {
         type: Sequelize.DOUBLE(11, 2)
     },
-    // paymentDate: {
-    //     type: Sequelize.DATE,
-    //     get() {
-    //         return moment(this.getDataValue('paymentDate')).format('DD-MM-YYYY');
-    //     }
-    // },
-    // authorised: {
-    //     type: Sequelize.ENUM,
-    //     values: ['No', 'Yes'],
-    //     defaultValue: 'No'
-    // },
+    paymentDate: {
+        type: Sequelize.DATE,
+        get() {
+            return moment(this.getDataValue('paymentDate')).format('DD-MM-YYYY');
+        }
+    },
+    authorised: {
+        type: Sequelize.ENUM,
+        values: ['No', 'Yes'],
+        defaultValue: 'No'
+    },
 
     // authoriser: {
     //     type: Sequelize.INTEGER,
