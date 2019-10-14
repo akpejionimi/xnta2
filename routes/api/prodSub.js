@@ -6,7 +6,8 @@ const router = express.Router();
 router.get("/", prodSubController.getAllProdSubs);
 router.get("/group/:customerId", prodSubController.getSameCustomers);
 router.post("/", prodSubController.postProdSub);
-router.get("/:prodSubId", prodSubController.getProSubById);
+router.get("/:customerId", prodSubController.getProSubById);
+router.get("/customer/:customerId", prodSubController.getAllSubByCustomer);
 router.get("/edit/:prodSubId",prodSubController.getProSubById);
 router.put("/edit/:prodSubId", prodSubController.postUpdateProduct);
 

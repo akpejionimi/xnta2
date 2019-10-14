@@ -1,6 +1,8 @@
 const sequelize = require("sequelize");
 
-const { Customer, ProductSubscription,
+const { 
+	Customer, 
+	ProductSubscription,
 	Savings_Products,
 	Product_Payment
 } = require("../models/operatorModel")
@@ -75,21 +77,22 @@ exports.getPaymentById = (req, res, next) => {
 
 //Get created products and customers and then create Payment 
 exports.postPayment = (req, res, next) => {
-	const { paymentValue, authorised, paymentDate } = req.body;
-	const prodSubId = req.params.prodSubId;
-	if (!paymentValue) {
+	const { paymentValue, authorised, paymentDate, prodSubId } = req.body;
+	const customerId = req.params.customerId;
+	if (!paymentValue, !paymentDate) {
 		res.status(400).json({ msg: 'All field required' });
 	} else {
-		ProductSubscription.findByPk(prodSubId)
+		ProductSubscription.findByPk(customerId)
 			.then(() => {
 				Product_Payment.create({
+					customerId,
 					prodSubId,
 					paymentValue,
 					authorised,
 					paymentDate
 				})
-					.then((prodSub => {
-						res.json(prodSub)
+					.then((customer => {
+						res.json(customer)
 					}))
 			})
 			.catch((err) => res.status(400).send({

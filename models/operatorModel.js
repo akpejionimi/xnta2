@@ -302,6 +302,7 @@ ProductSubscription.belongsTo(Savings_Products, { foreignKey: 'productId' });
 // Product_Payment.belongsTo(Customer, { foreignKey: 'customerId' });
 // Product_Payment.belongsTo(Savings_Products, { foreignKey: 'productId' });
 Product_Payment.belongsTo(ProductSubscription, { foreignKey: 'prodSubId' });
+Product_Payment.belongsTo(Customer, { foreignKey: 'customerId' });
 
 //Fiscal Year & Fiscal Month
 Fiscal_Year.belongsTo(Fiscal_Month, { foreignKey: 'fiscalMonthId' })

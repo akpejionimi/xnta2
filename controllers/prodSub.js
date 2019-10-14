@@ -49,21 +49,23 @@ exports.getSameCustomers = (req, res, next) => {
 
 //  Gets a Single ProdSub by its id
 exports.getProSubById = (req, res) => {
-	const prodSubId = req.params.prodSubId;
-	ProductSubscription.findOne({
+	const customerId = req.params.customerId;
+	console.log(customerId);
+	
+	ProductSubscription.findAll({
 		where: {
-			prodSubId: prodSubId
+			customerId: customerId
 		},
 		include: [
 			{
 				model: Savings_Products,
 				all: true,
-				attributes: { exclude: ["productId"] },
+				attributes: { exclude: ["updatedAt"] },
 			},
 			{
 				model: Customer,
 				all: true,
-				attributes: { exclude: ["customerId"] },
+				attributes: { exclude: ["updatedAt"] },
 			}
 
 		]
@@ -79,6 +81,40 @@ exports.getProSubById = (req, res) => {
 		})
 		.catch(err => next(err));
 };
+
+// Get all Sub by a single customer
+exports.getAllSubByCustomer = (req, res) => {
+	const customerId = req.params.customerId;
+	ProductSubscription.findAll({
+		where: {
+			customerId: customerId
+		},
+		include: [
+			{
+				model: Savings_Products,
+				all: true,
+				attributes: { exclude: ["updatedAt"] },
+			},
+			{
+				model: Customer,
+				all: true,
+				attributes: { exclude: ["customerId"] },
+			}
+
+		]
+	})
+		.then(customer => {
+			if (!customer) {
+				const error = new Error("Customer not found");
+				error.statusCode = 404;
+				next(error);
+			} else {
+				res.json(customer);
+			}
+		})
+		.catch(err => next(err));
+};
+
 
 //Get created products and customers and then create Subscription 
 exports.postProdSub = (req, res, next) => {
