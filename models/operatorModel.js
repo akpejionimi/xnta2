@@ -196,9 +196,7 @@ ProductSubscription.init({
     },
     signUpDate: {
         type: Sequelize.DATE,
-        get() {
-            return moment(this.getDataValue('signUpDate')).format('DD-MM-YYYY');
-        }
+        
     },
 }, {
         sequelize: db,
@@ -217,9 +215,6 @@ Product_Payment.init({
     },
     paymentDate: {
         type: Sequelize.DATE,
-        get() {
-            return moment(this.getDataValue('paymentDate')).format('DD-MM-YYYY');
-        }
     },
     authorised: {
         type: Sequelize.ENUM,

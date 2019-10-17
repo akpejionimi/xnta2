@@ -38,16 +38,16 @@ exports.getAllPayments = (req, res, next) => {
 
 //  Gets a Single ProdSub by its id
 exports.getPaymentById = (req, res, next) => {
-	const paymentId = req.params.paymentId;
-	Product_Payment.findByPk({
+	const customerId = req.params.customerId;
+	Product_Payment.findAll({
 		where: {
-			paymentId: paymentId
+			customerId
 		},
 		include: [
 			{
 				model: ProductSubscription,
 				all: true,
-				attributes: { exclude: ["paymentId", "createdAt", "updatedAt", "paymentValue", "authorised"] },
+				attributes: { exclude: ["paymentId", "createdAt", "updatedAt",, "authorised"] },
 				include: [
 					{
 						model: Savings_Products,
@@ -63,13 +63,13 @@ exports.getPaymentById = (req, res, next) => {
 			}
 		]
 	})
-		.then(payment => {
-			if (!payment) {
+		.then(customer => {
+			if (!customer) {
 				const error = new Error("Payment not found");
 				error.statusCode = 404;
 				next(error);
 			} else {
-				res.json(payment);
+				res.json(customer);
 			}
 		})
 		.catch(err => next(err));
@@ -102,32 +102,14 @@ exports.postPayment = (req, res, next) => {
 	}
 }
 
-// exports.postPayment = (req, res, next) => {
-// 	const { paymentValue } = req.body;
-// 	const prodSubId = req.params.prodSubId;
-// 	Product_Payment.findByPk(prodSubId)
-// 		.then(() => {
-// 			Product_Payment.create({
-// 				prodSubId,
-// 				paymentValue,
-// 			})
-// 				.then(payment => {
-// 					res.json(payment);
-// 				}).catch((err) => next(err))
-
-// 		})
-// 		.catch(err =>
-// 			res
-// 				.status(500)
-// 				.json({ msg: "Payment error", error: err })
-// 		);
-// };
 
 exports.getSumPaymentById = (req, res, next) => {
 	const prodSubId = req.params.prodSubId;
+	const customerId = req.params.customerId;
 	Product_Payment.findAll({
 		where: {
-			prodSubId: prodSubId
+			customerId: customerId,
+			prodSubId: 2,
 		},
 		attributes: [[sequelize.fn('sum', sequelize.col('paymentValue')), 'paymentValue']],
 		// group : ['product_payment.prodSubId'],
@@ -136,16 +118,34 @@ exports.getSumPaymentById = (req, res, next) => {
 	})
 }
 //   .then(function () {
-//     return Product_Payment.findAll({where: {prodSubId: 1}});
-// })
+	//     return Product_Payment.findAll({where: {prodSubId: 1}});
+	// })
+	
+	// exports.postPayment = (req, res, next) => {
+	// 	const { paymentValue } = req.body;
+	// 	const prodSubId = req.params.prodSubId;
+	// 	Product_Payment.findByPk(prodSubId)
+	// 		.then(() => {
+	// 			Product_Payment.create({
+	// 				prodSubId,
+	// 				paymentValue,
+	// 			})
+	// 				.then(payment => {
+	// 					res.json(payment);
+	// 				}).catch((err) => next(err))
+	
+	// 		})
+	// 		.catch(err =>
+	// 			res
+	// 				.status(500)
+	// 				.json({ msg: "Payment error", error: err })
+	// 		);
+	// };
+	
+	// Edit Payment
 
-
-
-
-
-// Edit Payment
-// exports.postUpdateProduct = (req, res, next) => {
-// 	const { signUpDate, customerId, productId } = req.body;
+	// exports.postUpdateProduct = (req, res, next) => {
+		// 	const { signUpDate, customerId, productId } = req.body;
 // 	const prodSubId = req.params.prodSubId;
 // 	ProductSubscription.findByPk(prodSubId)
 // 		.then((prodSub) => {
